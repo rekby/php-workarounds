@@ -3,7 +3,9 @@
  *  It replaces their calls to MySQLi function calls.
  *  Just include this file in start of your index.php.
  *
- *  Written by 4X_Pro, http://xpro.su
+ *  Initial written by 4X_Pro, http://xpro.su
+ *  Additions with Timofey Koolin: timofey@koolin.ru
+ *  https://github.com/rekby/php-workarounds/edit/master/mysql-php7.php
  *  Distributed under MIT license terms.
  * **/
 
@@ -66,4 +68,19 @@ function mysql_free_result($res) {
 
 function mysql_close($link) {
   return mysqli_close($link);
+}
+
+function mysql_escape_string($string){
+    return mysql_real_escape_string($string);
+}
+
+function mysql_real_escape_string($string, $link=NULL){
+    if ($link==NULL) $link=$GLOBALS['mysql_oldstyle_link'];
+    return mysqli_real_escape_string($link, $string);
+}
+
+function mysql_result($res, $row, $field = 0){
+    mysqli_data_seek($res, $row);
+    $arr = mysqli_fetch_array($res);
+    return $arr[$field];
 }
